@@ -10,6 +10,46 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
     // Define o nome do Pokémon com base nos detalhes da API
     pokemon.name = pokeDetail.name
 
+    pokemon.base_stat = pokeDetail.base_stat
+
+    // Verifica se há informações de habilidade na resposta da API
+    if (pokeDetail.abilities && pokeDetail.abilities.length > 0) {
+        // Assume a primeira habilidade, mas você pode personalizar a lógica de acordo com suas necessidades
+        pokemon.ability = pokeDetail.abilities[0].ability.name;
+    } else {
+        pokemon.ability = "N/A";
+    }
+
+        // Verifica se há informações de stats na resposta da API
+    if (pokeDetail.stats && pokeDetail.stats.length > 0) {
+        // Encontra o stat de base (base_stat) dentro do array stats
+        const baseStat = pokeDetail.stats.find((stat) => stat.stat.name === "hp"); // Substitua "hp" pelo nome da estatística desejada
+        if (baseStat) {
+            pokemon.base_stat = baseStat.base_stat;
+        } else {
+            pokemon.base_stat = "N/A";
+        }
+    } else {
+        pokemon.base_stat = "N/A";
+    }
+
+
+
+    // Verifica se há informações de height e weight fora do objeto stats
+if (pokeDetail.height) {
+    pokemon.height = pokeDetail.height / 10; // Converta de decímetros para metros (10 decímetros = 1 metro)
+} else {
+    pokemon.height = "N/A"; 
+}
+
+
+    if (pokeDetail.weight) {
+        pokemon.weight = pokeDetail.weight / 10; // Converta de hectogramas para quilogramas (10 hectogramas = 1 quilograma)
+    } else {
+        pokemon.weight = "N/A";
+    }
+
+
     // Mapeia os tipos do Pokémon a partir dos detalhes da API
     const types = pokeDetail.types.map((typeSlot) => typeSlot.type.name)
     // Obtém o primeiro tipo do array
